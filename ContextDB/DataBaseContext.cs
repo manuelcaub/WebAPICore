@@ -6,6 +6,8 @@ namespace WebAPICore.ContextDB
     {
         public DbSet<User> Users { get; set; }
 
+        public DbSet<Product> Products { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite("Filename=MyDatabase.db");

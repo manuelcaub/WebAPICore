@@ -2,8 +2,8 @@ namespace WebAPICore.Models
 {
     public class UserModel
     {
-        public string Name;
+        public string Name { get; set; }
 
-        public string Password;
+        public string Password { get; set; }
     }
 }
