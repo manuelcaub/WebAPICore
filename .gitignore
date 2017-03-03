@@ -264,5 +264,8 @@ paket-files/
 __pycache__/
 *.pyc
 
+# VS Code Files
+.vscode/
+
 # Cake - Uncomment if you are using it
 # tools/
