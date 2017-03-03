@@ -1,30 +1,43 @@
 namespace WebAPICore.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
-    using WebAPICore.Models;
-    using WebAPICore.ContextDB.Data;
-    using WebAPICore.ContextDB;
+    using WebAPICore.Data.Repositories;
+    using WebAPICore.Data;
 
     [Route("api/[controller]")]
     public class ProductsController : Controller
     {
-        private readonly ProductRepository _repProduct = new ProductRepository();
+        private readonly IProductRepository _repProduct;
+
+        public ProductsController(IProductRepository repProduct)
+        {
+            _repProduct = repProduct;
+        }
 
         [HttpPost]
-        public void Post([FromBody]ProductModel product)
+        public IActionResult Post([FromBody]Product product)
         {
-            _repProduct.Create(new Product 
-            {
-                Name = product.Name,
-                Price = product.Price,
-                Currency = product.Currency
-            });
+            _repProduct.Create(product);
+            return Created("GetProduct", product);
+        }
+
+        [HttpGet("{id}", Name = "GetProduct")]
+        public IActionResult GetById(int id)
+        {
+            return new JsonResult(_repProduct.Read(id));
         }
 
         [HttpGet]
-        public JsonResult Get()
+        public IActionResult GetAll()
         {
             return new JsonResult(_repProduct.ReadAll());
+        }
+
+        [HttpPut]
+        public IActionResult Put([FromBody]Product product)
+        {
+            _repProduct.Update(product);
+            return new JsonResult(product);
         }
     }
 }

@@ -1,7 +1,7 @@
-using Microsoft.EntityFrameworkCore;
-
-namespace WebAPICore.ContextDB
+namespace WebAPICore.Data
 {
+    using Microsoft.EntityFrameworkCore;
+    
     public class DataBaseContext : DbContext
     {
         public DbSet<User> Users { get; set; }

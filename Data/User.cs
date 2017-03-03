@@ -1,4 +1,4 @@
-namespace WebAPICore.ContextDB
+namespace WebAPICore.Data
 {
     public class User
     {
