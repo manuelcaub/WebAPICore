@@ -1,14 +1,14 @@
-using System;
-using System.Linq;
-
 namespace WebAPICore.Service
 {
-    public class LoginService
+    using System;
+    using System.Linq;
+
+    public class LoginService : ILoginService
     {
         public string GenerateToken()
         {
-            byte [] time = BitConverter.GetBytes(DateTime.UtcNow.ToBinary());
-            byte [] uuid = Guid.NewGuid().ToByteArray();
+            byte[] time = BitConverter.GetBytes(DateTime.UtcNow.ToBinary());
+            byte[] uuid = Guid.NewGuid().ToByteArray();
             return Convert.ToBase64String(time.Concat(uuid).ToArray());
         }
     }

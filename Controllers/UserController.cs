@@ -1,42 +1,42 @@
 namespace WebAPICore.Controllers
 {
-    using WebAPICore.Data;
-    using WebAPICore.Data.Repositories;
+    using WebAPICore.Models;
+    using WebAPICore.Service;
     using Microsoft.AspNetCore.Mvc;
 
     [Route("api/[controller]")]
     public class UsersController : Controller
     {
-        private readonly IUserRepository _repUser;
+        private readonly IUserService _userService;
 
-        public UsersController(IUserRepository repUser)
+        public UsersController(IUserService userService)
         {
-            _repUser = repUser;
+            _userService = userService;
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody]User user)
+        public IActionResult Post([FromBody]UserModel user)
         {
-            _repUser.Create(user);
+            _userService.Create(user);
             return Created("GetUser", user);
         }
 
         [HttpGet("{id}", Name = "GetUser")]
         public IActionResult GetById(int id)
         {
-            return new JsonResult(_repUser.Read(id));
+            return new JsonResult(_userService.GetUserById(id));
         }
 
         [HttpGet]
         public IActionResult GetAll()
         {
-            return new JsonResult(_repUser.ReadAll());
+            return new JsonResult(_userService.GetAllUsersModel());
         }
 
         [HttpPut]
-        public IActionResult Put([FromBody]User user)
+        public IActionResult Put([FromBody]ChangePasswordModel user)
         {
-            _repUser.Update(user);
+            _userService.UpdatePassword(user);
             return new JsonResult(user);
         }
     }

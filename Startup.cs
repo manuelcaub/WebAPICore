@@ -7,6 +7,7 @@ namespace WebAPICore
     using Microsoft.Extensions.Logging;
     using WebAPICore.Data;
     using WebAPICore.Data.Repositories;
+    using WebAPICore.Service;
 
     public class Startup
     {
@@ -33,10 +34,16 @@ namespace WebAPICore
             services.AddEntityFrameworkSqlite().AddDbContext<DataBaseContext>();
 
             // Add framework services.
-            services.AddMvc();
+            services.AddMvc().AddJsonOptions(jsonOptions => 
+            {
+                jsonOptions.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+            });
 
             services.AddSingleton<IProductRepository, ProductRepository>();
             services.AddSingleton<IUserRepository, UserRepository>();
+            services.AddSingleton<DataBaseContext>();
+            services.AddScoped<ILoginService, LoginService>();
+            services.AddScoped<IUserService, UserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +53,7 @@ namespace WebAPICore
             loggerFactory.AddDebug();
 
             app.UseMvc();
+            app.UseWebSockets();
         }
     }
 }

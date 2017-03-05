@@ -2,6 +2,7 @@ namespace WebAPICore.Data.Repositories
 {
     using System.Linq;
     using System.Collections.Generic;
+    using WebAPICore.Models;
 
     public class UserRepository : IUserRepository
     {
@@ -42,6 +43,20 @@ namespace WebAPICore.Data.Repositories
                 _dataContext.Users.Remove(user);
                 _dataContext.SaveChanges();
             }
+        }
+
+        public IList<UserModel> GetAllUsersModel()
+        {
+            return _dataContext.Users.Select(user => new UserModel
+            {
+                Id = user.Id,
+                Email = user.Email
+            }).ToList();
+        }
+
+        public User GetByEmail(string email)
+        {
+            return _dataContext.Users.FirstOrDefault(user => user.Email == email);
         }
     }
 }

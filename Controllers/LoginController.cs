@@ -7,7 +7,12 @@ namespace WebAPICore.Controllers
     [Route("api/[controller]")]
     public class LoginController : Controller
     {
-        private readonly LoginService _loginService = new LoginService();
+        private readonly ILoginService _loginService;
+
+        public LoginController(ILoginService loginService)
+        {
+            _loginService = loginService;
+        }
 
         [HttpGet("token")]
         public async Task<IActionResult> GetToken()
