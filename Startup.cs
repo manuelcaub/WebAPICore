@@ -5,6 +5,7 @@ namespace WebAPICore
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
+    using AutoMapper;
     using WebAPICore.Data;
     using WebAPICore.Data.Repositories;
     using WebAPICore.Service;
@@ -39,11 +40,19 @@ namespace WebAPICore
                 jsonOptions.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
             });
 
+            var mapperConfiguration = new MapperConfiguration(cfg => // In Application_Start()
+            {
+                cfg.AddProfile<AutoMapperProfile>();
+            });
+            mapperConfiguration.AssertConfigurationIsValid();
+            var mapper = mapperConfiguration.CreateMapper();
+            services.AddAutoMapper();
+
             services.AddSingleton<IProductRepository, ProductRepository>();
             services.AddSingleton<IUserRepository, UserRepository>();
             services.AddSingleton<DataBaseContext>();
-            services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IProductService, ProductService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
