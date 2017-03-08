@@ -1,17 +1,22 @@
 namespace WebAPICore.Data.Repositories
 {
+    using System;
     using System.Collections.Generic;
 
-    public interface IRepository<TModel>
+    public interface IRepository<TEntity>
     {
-        void Create(TModel model);
+        void Create(TEntity entity);
 
-        IList<TModel> ReadAll();
+        IList<TEntity> ReadAll();
 
-        TModel Read(int id);
+        IList<TResult> ReadAll<TResult>(Func<TEntity, TResult> map);
 
-        void Update(TModel product);
+        IList<TResult> ReadByPredicate<TResult>(Func<TEntity, bool> predicate, Func<TEntity, TResult> map);
 
-        void Delete(int id);
+        TEntity Read(ulong id);
+
+        void Update(TEntity entity);
+
+        void Delete(TEntity entity);
     }
 }

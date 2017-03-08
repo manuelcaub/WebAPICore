@@ -2,7 +2,7 @@ namespace WebAPICore.Data
 {
     public class User
     {
-        public int Id { get; set; }
+        public ulong Id { get; set; }
 
         public string Email { get; set; }
 
