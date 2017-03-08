@@ -1,42 +1,42 @@
 namespace WebAPICore.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
-    using WebAPICore.Data.Repositories;
-    using WebAPICore.Data;
+    using Models;
+    using Service;
 
     [Route("api/[controller]")]
     public class ProductsController : Controller
     {
-        private readonly IProductRepository _repProduct;
+        private readonly IProductService _serviceProduct;
 
-        public ProductsController(IProductRepository repProduct)
+        public ProductsController(IProductService serviceProduct)
         {
-            _repProduct = repProduct;
+            _serviceProduct = serviceProduct;
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody]Product product)
+        public IActionResult Post([FromBody]ProductModel product)
         {
-            _repProduct.Create(product);
+            _serviceProduct.Create(product);
             return Created("GetProduct", product);
         }
 
         [HttpGet("{id}", Name = "GetProduct")]
-        public IActionResult GetById(int id)
+        public IActionResult GetById(ulong id)
         {
-            return new JsonResult(_repProduct.Read(id));
+            return new JsonResult(_serviceProduct.ReadById<ProductModel>(id));
         }
 
         [HttpGet]
         public IActionResult GetAll()
         {
-            return new JsonResult(_repProduct.ReadAll());
+            return new JsonResult(_serviceProduct.ReadAll<ProductModel>());
         }
 
         [HttpPut]
-        public IActionResult Put([FromBody]Product product)
+        public IActionResult Put([FromBody]ProductModel product)
         {
-            _repProduct.Update(product);
+            _serviceProduct.Update(product);
             return new JsonResult(product);
         }
     }

@@ -17,20 +17,20 @@ namespace WebAPICore.Controllers
         [HttpPost]
         public IActionResult Post([FromBody]UserModel user)
         {
-            _userService.Create(user);
+            _userService.Create<UserModel>(user);
             return Created("GetUser", user);
         }
 
         [HttpGet("{id}", Name = "GetUser")]
-        public IActionResult GetById(int id)
+        public IActionResult GetById(ulong id)
         {
-            return new JsonResult(_userService.GetUserById(id));
+            return new JsonResult(_userService.ReadById<UserModel>(id));
         }
 
         [HttpGet]
         public IActionResult GetAll()
         {
-            return new JsonResult(_userService.GetAllUsersModel());
+            return new JsonResult(_userService.ReadAll<UserModel>());
         }
 
         [HttpPut]
