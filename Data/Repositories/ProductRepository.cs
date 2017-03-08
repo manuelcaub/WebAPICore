@@ -2,6 +2,7 @@ namespace WebAPICore.Data.Repositories
 {
     using System.Linq;
     using System.Collections.Generic;
+    using System;
 
     public class ProductRepository : IProductRepository
     {
@@ -23,7 +24,7 @@ namespace WebAPICore.Data.Repositories
             return _dataContext.Products.ToList();
         }
 
-        public Product Read(int id)
+        public Product Read(ulong id)
         {
             return _dataContext.Products.Find(id);
         }
@@ -34,14 +35,23 @@ namespace WebAPICore.Data.Repositories
             _dataContext.SaveChanges();
         }
 
-        public void Delete(int id)
+        public void Delete(Product product)
         {
-            Product product = _dataContext.Products.FirstOrDefault(productDB => productDB.Id == id);
             if(product != null)
             {
                 _dataContext.Products.Remove(product);
                 _dataContext.SaveChanges();
             }
+        }
+
+        public IList<TResult> ReadAll<TResult>(Func<Product, TResult> map)
+        {
+            return _dataContext.Products.Select(map).ToList();
+        }
+
+        public IList<TResult> ReadByPredicate<TResult>(Func<Product, bool> predicate, Func<Product, TResult> map)
+        {
+            return _dataContext.Products.Where(predicate).Select(map).ToList();
         }
     }
 }

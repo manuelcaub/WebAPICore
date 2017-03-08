@@ -2,7 +2,7 @@ namespace WebAPICore.Data.Repositories
 {
     using System.Linq;
     using System.Collections.Generic;
-    using WebAPICore.Models;
+    using System;
 
     public class UserRepository : IUserRepository
     {
@@ -24,7 +24,7 @@ namespace WebAPICore.Data.Repositories
             return _dataContext.Users.ToList();
         }
 
-        public User Read(int id)
+        public User Read(ulong id)
         {
             return _dataContext.Users.Find(id);
         }
@@ -35,9 +35,8 @@ namespace WebAPICore.Data.Repositories
             _dataContext.SaveChanges();
         }
 
-        public void Delete(int id)
+        public void Delete(User user)
         {
-            User user = _dataContext.Users.FirstOrDefault(userDB => userDB.Id == id);
             if(user != null)
             {
                 _dataContext.Users.Remove(user);
@@ -45,18 +44,24 @@ namespace WebAPICore.Data.Repositories
             }
         }
 
-        public IList<UserModel> GetAllUsersModel()
+        public IList<TResult> GetAll<TResult>(Func<User, TResult> map)
         {
-            return _dataContext.Users.Select(user => new UserModel
-            {
-                Id = user.Id,
-                Email = user.Email
-            }).ToList();
+            return _dataContext.Users.Select(map).ToList();
         }
 
         public User GetByEmail(string email)
         {
             return _dataContext.Users.FirstOrDefault(user => user.Email == email);
+        }
+
+        public IList<TResult> ReadAll<TResult>(Func<User, TResult> map)
+        {
+            return _dataContext.Users.Select(map).ToList();
+        }
+
+        public IList<TResult> ReadByPredicate<TResult>(Func<User, bool> predicate, Func<User, TResult> map)
+        {
+            return _dataContext.Users.Where(predicate).Select(map).ToList();
         }
     }
 }

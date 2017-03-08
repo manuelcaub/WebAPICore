@@ -1,41 +1,19 @@
 namespace WebAPICore.Service
 {
-    using System.Collections.Generic;
+    using AutoMapper;
     using WebAPICore.Models;
     using WebAPICore.Data;
     using WebAPICore.Data.Repositories;
 
-    public class UserService : IUserService
+    public class UserService : AbstractDbService<User>, IUserService
     {
         private IUserRepository _userRepository;
+        private IMapper _mapper;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository repository, IMapper mapper) : base(repository, mapper)
         {
-            _userRepository = userRepository;
-        }
-
-        public void Create(UserModel user)
-        {
-            _userRepository.Create(new User
-            {
-                Email = user.Email,
-                Password = user.Password
-            });
-        }
-
-        public IList<UserModel> GetAllUsersModel()
-        {
-            return _userRepository.GetAllUsersModel();
-        }
-
-        public UserModel GetUserById(int id)
-        {
-            User user = _userRepository.Read(id);
-            return new UserModel
-            {
-                Id = user.Id,
-                Email = user.Email
-            };
+            _userRepository = repository;
+            _mapper = mapper;
         }
 
         public void UpdatePassword(ChangePasswordModel modelPassword)
